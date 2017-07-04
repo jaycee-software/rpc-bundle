@@ -12,7 +12,7 @@ parameters:
 services:
     jaycee_software_rpc.rpc_response.subscriber:
         class: %jaycee_software_rpc.rpc_response.subscriber.class%
-        arguments: [@serializer]
+        arguments: ["@serializer"]
         tags:
             - { name: kernel.event_subscriber }
 
@@ -26,31 +26,31 @@ services:
 
     jaycee_software_rpc.rpc_request.parameter_type.scalar:
         class: %jaycee_software_rpc.rpc_request.parameter_type.scalar.class%
-        arguments: [@validator]
+        arguments: ["@validator"]
         tags:
             - { name: jaycee_software_rpc.rpc_request.parameter_type, type: scalar }
 
     jaycee_software_rpc.rpc_request.parameter_type.object:
         class: %jaycee_software_rpc.rpc_request.parameter_type.object.class%
-        arguments: [@validator, @jms_serializer, @jms_serializer.naming_strategy]
+        arguments: ["@validator", "@jms_serializer", "@jms_serializer.naming_strategy"]
         tags:
             - { name: jaycee_software_rpc.rpc_request.parameter_type, type: object }
 
     jaycee_software_rpc.rpc_request.parameter_type.list_of_objects:
         class: %jaycee_software_rpc.rpc_request.parameter_type.list_of_objects.class%
-        arguments: [%fxs_paginator.request_section%]
+        arguments: ["%fxs_paginator.request_section%"]
         tags:
             - { name: jaycee_software_rpc.rpc_request.parameter_type, type: list_of_objects }
 
     jaycee_software_rpc.rpc_request.parameter_type.entity:
         class: %jaycee_software_rpc.rpc_request.parameter_type.entity.class%
-        arguments: [@?doctrine]
+        arguments: ["@?doctrine"]
         tags:
             - { name: jaycee_software_rpc.rpc_request.parameter_type, type: entity }
 
     jaycee_software_rpc.rpc_request.parameters.subscriber:
         class: %jaycee_software_rpc.rpc_request.parameters.subscriber.class%
-        arguments: [@jaycee_software_rpc.schema.manager]
+        arguments: ["@jaycee_software_rpc.schema.manager"]
         tags:
             - { name: kernel.event_subscriber }
 
