@@ -5,9 +5,9 @@
     "keywords": ["rpc", "bundle"],
     "require": {
         "php": ">=5.5",
-        "symfony/http-kernel": "~2.4.3",
-        "symfony/http-foundation": "~2.4.3",
-        "symfony/serializer": "~2.4.3"
+        "symfony/http-kernel": "~2.8|~3",
+        "symfony/http-foundation": "~2.8|~3",
+        "symfony/serializer": "~2.8|~3"
     },
     "suggest": {
         "oldsound/rabbitmq-bundle": "Allow to use AMQP as request source instead of HTTP",
