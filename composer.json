@@ -1,0 +1,22 @@
+{
+    "name": "jaycee-software/rpc-bundle",
+    "type": "symfony-bundle",
+    "description": "Jaycee RPC bundle",
+    "keywords": ["rpc", "bundle"],
+    "require": {
+        "php": ">=5.5",
+        "symfony/http-kernel": "~2.4.3",
+        "symfony/http-foundation": "~2.4.3",
+        "symfony/serializer": "~2.4.3"
+    },
+    "suggest": {
+        "oldsound/rabbitmq-bundle": "Allow to use AMQP as request source instead of HTTP",
+        "knplabs/knp-paginator-bundle": "Allow to use KNP pagination to split results into pages",
+        "jms/serializer": "Allow to use JMS serializer instead of basic Symfony Serializer component"
+    },
+    "autoload": {
+        "psr-4": {
+            "JayceeSoftware\\RpcBundle\\": ""
+        }
+    }
+}

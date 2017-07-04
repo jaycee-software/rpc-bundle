@@ -1,0 +1,74 @@
+parameters:
+    jaycee_software_rpc.request_source.amqp.consumer.class: JayceeSoftware\RpcBundle\Foundation\RequestSource\AMQPConsumer
+    jaycee_software_rpc.rpc_response.subscriber.class: JayceeSoftware\RpcBundle\EventListener\RpcResponseSubscriber
+    jaycee_software_rpc.rpc_response.pagination_converter.subscriber.class: JayceeSoftware\RpcBundle\EventListener\PaginationConverterSubscriber
+    jaycee_software_rpc.schema.manager.class: JayceeSoftware\RpcBundle\Schema\SchemaManager
+    jaycee_software_rpc.rpc_request.parameter_type.scalar.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeScalar
+    jaycee_software_rpc.rpc_request.parameter_type.object.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeObject
+    jaycee_software_rpc.rpc_request.parameter_type.list_of_objects.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeListOfObjects
+    jaycee_software_rpc.rpc_request.parameter_type.entity.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeEntity
+    jaycee_software_rpc.rpc_request.parameters.subscriber.class: JayceeSoftware\RpcBundle\EventListener\RpcRequestParametersSubscriber
+
+services:
+    jaycee_software_rpc.rpc_response.subscriber:
+        class: %jaycee_software_rpc.rpc_response.subscriber.class%
+        arguments: [@serializer]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    jaycee_software_rpc.rpc_response.pagination_converter.subscriber:
+        class: %jaycee_software_rpc.rpc_response.pagination_converter.subscriber.class%
+        tags:
+            - { name: kernel.event_subscriber }
+
+    jaycee_software_rpc.schema.manager:
+        class: %jaycee_software_rpc.schema.manager.class%
+
+    jaycee_software_rpc.rpc_request.parameter_type.scalar:
+        class: %jaycee_software_rpc.rpc_request.parameter_type.scalar.class%
+        arguments: [@validator]
+        tags:
+            - { name: jaycee_software_rpc.rpc_request.parameter_type, type: scalar }
+
+    jaycee_software_rpc.rpc_request.parameter_type.object:
+        class: %jaycee_software_rpc.rpc_request.parameter_type.object.class%
+        arguments: [@validator, @jms_serializer, @jms_serializer.naming_strategy]
+        tags:
+            - { name: jaycee_software_rpc.rpc_request.parameter_type, type: object }
+
+    jaycee_software_rpc.rpc_request.parameter_type.list_of_objects:
+        class: %jaycee_software_rpc.rpc_request.parameter_type.list_of_objects.class%
+        arguments: [%fxs_paginator.request_section%]
+        tags:
+            - { name: jaycee_software_rpc.rpc_request.parameter_type, type: list_of_objects }
+
+    jaycee_software_rpc.rpc_request.parameter_type.entity:
+        class: %jaycee_software_rpc.rpc_request.parameter_type.entity.class%
+        arguments: [@?doctrine]
+        tags:
+            - { name: jaycee_software_rpc.rpc_request.parameter_type, type: entity }
+
+    jaycee_software_rpc.rpc_request.parameters.subscriber:
+        class: %jaycee_software_rpc.rpc_request.parameters.subscriber.class%
+        arguments: [@jaycee_software_rpc.schema.manager]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    jaycee_software_rpc.log.formatter.console:
+        class: Symfony\Bridge\Monolog\Formatter\ConsoleFormatter
+        arguments:
+            - "%%start_tag%%[%%datetime%%] %%channel%%.%%extra.service_name%%.%%level_name%%:%%end_tag%% %%message%% %%context%% %%extra%%\n"
+        public: false
+
+    jaycee_software_rpc.log.formatter.main:
+        class: Monolog\Formatter\LineFormatter
+        arguments:
+            - "[%%datetime%%] %%channel%%.%%extra.service_name%%.%%level_name%%: %%message%% %%context%% %%extra%%\n"
+        public: false
+
+    jaycee_software_rpc.log.processor:
+        class: JayceeSoftware\RpcBundle\Logger\RpcProcessor
+        tags:
+            - { name: monolog.processor, method: processRecord }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
