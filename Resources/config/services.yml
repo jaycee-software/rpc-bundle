@@ -8,7 +8,7 @@ parameters:
     jaycee_software_rpc.rpc_request.parameter_type.list_of_objects.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeListOfObjects
     jaycee_software_rpc.rpc_request.parameter_type.entity.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeEntity
     jaycee_software_rpc.rpc_request.parameters.subscriber.class: JayceeSoftware\RpcBundle\EventListener\RpcRequestParametersSubscriber
-	jaycee_software_rpc.request_section: "_paginator_params"
+    jaycee_software_rpc.request_section: "_paginator_params"
 
 services:
     jaycee_software_rpc.rpc_response.subscriber:
