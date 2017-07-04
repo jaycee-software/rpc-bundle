@@ -8,6 +8,9 @@ parameters:
     jaycee_software_rpc.rpc_request.parameter_type.list_of_objects.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeListOfObjects
     jaycee_software_rpc.rpc_request.parameter_type.entity.class: JayceeSoftware\RpcBundle\Schema\Parameter\TypeEntity
     jaycee_software_rpc.rpc_request.parameters.subscriber.class: JayceeSoftware\RpcBundle\EventListener\RpcRequestParametersSubscriber
+    jaycee_software_rpc.schema.service.class: JayceeSoftware\RpcBundle\Schema\SchemaService
+    jaycee_software_rpc.schema.formatter.smd.class: JayceeSoftware\RpcBundle\Schema\Formatter\SMD
+    jaycee_software_rpc.schema.controller.class: JayceeSoftware\RpcBundle\Controller\SchemaController
 
 services:
     jaycee_software_rpc.rpc_response.subscriber:
@@ -72,3 +75,16 @@ services:
             - { name: monolog.processor, method: processRecord }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    jaycee_software_rpc.schema.service:
+        class: %jaycee_software_rpc.schema.service.class%
+
+    jaycee_software_rpc.schema.formatter.smd:
+        class: %jaycee_software_rpc.schema.formatter.smd.class%
+        arguments: [@jms_serializer.naming_strategy]
+        tags:
+            - { name: jaycee_software_rpc.schema.formatter, format: smd }
+
+    jaycee_software_rpc.schema.cache.default:
+        class: Doctrine\Common\Cache\PhpFileCache
+        arguments: [%kernel.cache_dir%/jaycee_software_rpc/schema, ".schemacache.php"]

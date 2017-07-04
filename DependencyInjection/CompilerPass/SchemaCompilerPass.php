@@ -11,6 +11,7 @@ class SchemaCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $this->processManager($container);
+        $this->processFormatters($container);
     }
 
     private function processManager(ContainerBuilder $container)
@@ -30,6 +31,29 @@ class SchemaCompilerPass implements CompilerPassInterface
                     array(
                         new Reference($id),
                         $attributes['type'],
+                    )
+                );
+            }
+        }
+    }
+
+    private function processFormatters(ContainerBuilder $container)
+    {
+        if (!$container->hasDefinition('fxs_rpc.schema.service')) {
+            return;
+        }
+
+        $definition = $container->getDefinition('fxs_rpc.schema.service');
+
+        $taggedServices = $container->findTaggedServiceIds('fxs_rpc.schema.formatter');
+
+        foreach ($taggedServices as $id => $tagAttributes) {
+            foreach ($tagAttributes as $attributes) {
+                $definition->addMethodCall(
+                    'addFormatter',
+                    array(
+                        new Reference($id),
+                        $attributes['format'],
                     )
                 );
             }
