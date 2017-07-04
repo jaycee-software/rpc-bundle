@@ -20,7 +20,7 @@ class RpcResponseSubscriber implements EventSubscriberInterface
     /**
      * @param Serializer $serializer
      */
-    public function __construct(Serializer $serializer)
+    public function __construct($serializer)
     {
         $this->serializer = $serializer;
     }
